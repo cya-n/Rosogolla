@@ -1,3 +1,5 @@
+#Importing necessary libraries.
+
 import discord
 from discord.ext import commands
 import random
@@ -6,6 +8,9 @@ import os
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import wolframalpha
+
+
+#Initializing wolfram client and setting token.
 
 wolfClient = str(os.getenv('WOLF'))
 client2 = wolframalpha.Client(wolfClient)
@@ -18,6 +23,8 @@ client = commands.Bot(command_prefix = '_')
 client.remove_command('help')
 reddit = praw.Reddit("bot1", user_agent="Cyan's program 1.0 by /u/RosogollaBot")
 
+
+#List of features
 
 @client.event
 async def on_ready():
@@ -238,6 +245,16 @@ async def Schedule(ctx, amt: int):
 
 
     await ctx.send(embed=embed)
+
+@client.command(aliases=['cyan'])
+async def cyan(ctx):
+        embed = discord.Embed(
+        colour = discord.Colour(int("F8F8F8", 16))
+        )
+
+        embed.add_field(name='Ping', value=('god'), inline='False')
+        await ctx.send(embed=embed)
+
 
 @client.command(aliases = ['wa'])
 async def WolframAlpha(ctx, query: str):
