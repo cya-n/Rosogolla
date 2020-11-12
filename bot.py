@@ -12,6 +12,7 @@ client2 = wolframalpha.Client(wolfClient)
 scope = ["https://spreadsheets.google.com/feeds",'https://www.googleapis.com/auth/spreadsheets',"https://www.googleapis.com/auth/drive.file","https://www.googleapis.com/auth/drive"]
 creds = ServiceAccountCredentials.from_json_keyfile_name("creds.json", scope)
 client = gspread.authorize(creds)
+sheet2 = client.open("bot").sheet1
 sheet = client.open("Cool").sheet1
 token = os.getenv('TOKEN')
 client = commands.Bot(command_prefix = '_')
@@ -169,42 +170,40 @@ async def say(ctx, *, message):
 
 @client.command()
 async def hug(ctx, member : discord.Member):
-    huggifs = [
-     'https://66.media.tumblr.com/33c8d3b0b83514b16fc5fb06589ceb11/tumblr_nlrld1pXss1tros9go1_500.gif',
-     'https://media1.tenor.com/images/ce9dc4b7e715cea12604f8dbdb49141b/tenor.gif?itemid=4451998',
-     'https://i.kym-cdn.com/photos/images/newsfeed/001/230/145/957.gif',
-     'https://media1.tenor.com/images/7ed465434ba3c9b969944f2e341c86e8/tenor.gif?itemid=7876658',
-     'https://media1.tenor.com/images/1c692b486c6a43a35a5f32e91b1e6a5f/tenor.gif?itemid=9309062'
-     'https://media.tenor.com/images/853bb442dd8eae619c4a524ffad4261c/tenor.gif'
-     'https://media.tenor.com/images/3a9d2bd1bde9ed8ea02b2222988be6da/tenor.gif'
-     'https://media.tenor.com/images/71ae3fe37388e0d4ce1575090bf6cbdc/tenor.gif']
+    hugsies = open("hugs.txt", "r")
 
+    for line in hugsies:
+        hugs = hugsies.readlines()
 
     embed = discord.Embed(
     colour = discord.Colour(int("F8F8F8", 16)),
     description = f'{ctx.message.author.mention} hugs <@{member.id}>'
     )
 
-    embed.set_image(url = random.choice(huggifs))
-    await ctx.send(embed=embed)
+    embed.set_image(url = random.choice(hugs))
+
+    hugsies.close()
+
+    await ctx.send(embed = embed)
 
 
 @client.command()
 async def pat(ctx, member : discord.Member):
-    patgifs = [
-    'https://i.pinimg.com/originals/cd/7a/7e/cd7a7ea15b05b065bc59962cc288f5d8.gif'
-    'https://media.tenor.com/images/69fb17b3eafe27df334f9f873473d531/tenor.gif'
-    'https://media.tenor.com/images/27e35e2e393576d98a574d2dd75ca1b1/tenor.gif'
-    'https://media.tenor.com/images/c74e55214ecad0c056a372a9eabc5743/tenor.gif']
+    patsies = open("pats.txt", "r")
 
+    for line in patsies:
+        pats = patsies.readlines()
 
     embed = discord.Embed(
     colour = discord.Colour(int("F8F8F8", 16)),
-    description = f'{ctx.message.author.mention} pats <@{member.id}>'
+    description = f'{ctx.message.author.mention} hugs <@{member.id}>'
     )
 
-    embed.set_image(url = random.choice(patgifs))
-    await ctx.send(embed=embed)
+    embed.set_image(url = random.choice(pats))
+
+    patsies.close()
+
+    await ctx.send(embed = embed)
 
 
 @client.command()
@@ -255,6 +254,8 @@ async def WolframAlpha(ctx, query: str):
     except:
         embed.add_field(name='Error', value='Invalid Query')
         await ctx.send(embed=embed)
+
+
 
 
 client.run(token)
