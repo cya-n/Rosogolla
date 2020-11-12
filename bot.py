@@ -8,24 +8,14 @@ from oauth2client.service_account import ServiceAccountCredentials
 import wolframalpha
 
 wolfClient = str(os.getenv('WOLF'))
-
 client2 = wolframalpha.Client(wolfClient)
-
-
 scope = ["https://spreadsheets.google.com/feeds",'https://www.googleapis.com/auth/spreadsheets',"https://www.googleapis.com/auth/drive.file","https://www.googleapis.com/auth/drive"]
-
 creds = ServiceAccountCredentials.from_json_keyfile_name("creds.json", scope)
-
 client = gspread.authorize(creds)
-
 sheet = client.open("Cool").sheet1
-
-
 token = os.getenv('TOKEN')
-
 client = commands.Bot(command_prefix = '_')
 client.remove_command('help')
-
 reddit = praw.Reddit("bot1", user_agent="Cyan's program 1.0 by /u/RosogollaBot")
 
 
@@ -80,11 +70,13 @@ async def eightoborru(ctx,* question):
     embed.add_field(name='Answer', value=(f'```{random.choice(responses)}```'), inline='True')
     await ctx.send(embed=embed)
 
+
 @client.command(aliases=['Clear'])
 @commands.has_permissions(manage_messages=True)
 async def clear(ctx, amount=1):
     amount += 1
     await ctx.channel.purge(limit=amount)
+
 
 @client.command()
 @commands.has_permissions(kick_members=True)
@@ -141,6 +133,7 @@ async def unban(ctx, *, user=None):
 
     await ctx.send(f"Successfully unbanned {user.mention}!")
 
+
 @client.command(aliases=['red', 'Red', 'reddit'])
 async def Reddit(ctx, sub: str):
     submision = reddit.subreddit(sub).hot()
@@ -156,10 +149,6 @@ async def Reddit(ctx, sub: str):
     else:
         embed.set_image(url=submission.url)
         await ctx.send(embed=embed)
-    
-
-
-
 
 
 @client.event
@@ -218,9 +207,6 @@ async def pat(ctx, member : discord.Member):
     await ctx.send(embed=embed)
 
 
-
-
-
 @client.command()
 async def commands(ctx):
     embed = discord.Embed(
@@ -228,12 +214,12 @@ async def commands(ctx):
     )
 
     embed.set_author(name='Commands')
-    embed.add_field(name='Administration', value='kick, ban, unban, clear', inline = True)
-    embed.add_field(name='Fun', value='8ball, ping, say', inline = True)
-    embed.add_field(name='Imagery', value='Reddit', inline = True)
+    embed.add_field(name='Administration', value='`kick, ban, unban, clear`', inline = True)
+    embed.add_field(name='Fun', value='`8ball, ping, say`', inline = True)
+    embed.add_field(name='Imagery', value='`Reddit`', inline = True)
+    embed.add_field(name='Misc', value='`WolframAlpha, Schedule`')
 
     await ctx.send(embed=embed)
-
 
 
 @client.command(aliases = ["scd"])
@@ -263,21 +249,12 @@ async def WolframAlpha(ctx, query: str):
 
     try:
         output = next(res.results).text
-        
-
-
         embed.add_field(name='WolframAlpha', value=f'```{output}```')
-    
-
-
         await ctx.send(embed=embed)
 
     except:
         embed.add_field(name='Error', value='Invalid Query')
         await ctx.send(embed=embed)
-
-    
-
 
 
 client.run(token)
