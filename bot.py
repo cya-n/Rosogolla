@@ -6,13 +6,14 @@ import os
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import wolframalpha
+from googletrans import Translator
+import time
 
 wolfClient = str(os.getenv('WOLF'))
 client2 = wolframalpha.Client(wolfClient)
 scope = ["https://spreadsheets.google.com/feeds",'https://www.googleapis.com/auth/spreadsheets',"https://www.googleapis.com/auth/drive.file","https://www.googleapis.com/auth/drive"]
 creds = ServiceAccountCredentials.from_json_keyfile_name("creds.json", scope)
 client = gspread.authorize(creds)
-sheet2 = client.open("bot").sheet1
 sheet = client.open("Cool").sheet1
 token = os.getenv('TOKEN')
 client = commands.Bot(command_prefix = '_')
@@ -234,9 +235,8 @@ async def Schedule(ctx, amt: int):
     embed.add_field(name='Date', value=f'`{sheet.row_values(amt+1)[1]}`')
     embed.add_field(name='Time', value=f'`{sheet.row_values(amt+1)[2]}`')
 
-
-
     await ctx.send(embed=embed)
+
 
 @client.command(aliases = ['wa'])
 async def WolframAlpha(ctx, query: str):
@@ -256,6 +256,24 @@ async def WolframAlpha(ctx, query: str):
         await ctx.send(embed=embed)
 
 
+@client.command(aliases = ['t', 'translate'])
+async def Translate(ctx, *, tex: str):
+    translator = Translator()
+    textt = tex.split()
+    textv2 = " ".join(textt)
 
+    translatedText = translator.translate([textv2])
+    detectionstuff = translator.detect([textv2])
+    embed = discord.Embed(
+        colour = discord.Colour(int("F8F8F8", 16))
+        )
+
+    for translation in translatedText:
+        embed.add_field(name="Original Text", value = f'```{textv2}```')
+        embed.add_field(name="Translated Text", value = f'```{translation.text}```')
+        for lang in detectionstuff:
+            embed.set_footer(text=f"Translated from {lang.lang} to en")
+    time.sleep(6)
+    await ctx.send(embed=embed)
 
 client.run(token)
