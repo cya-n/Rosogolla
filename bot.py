@@ -23,7 +23,7 @@ reddit = praw.Reddit("bot1", user_agent="Cyan's program 1.0 by /u/RosogollaBot")
 
 @client.event
 async def on_ready():
-    await client.change_presence(activity=discord.Game('with Zyen'))
+    await client.change_presence(activity=discord.Game('R.I.P Zyen'))
     print('bot is ready')
 
 
@@ -145,12 +145,18 @@ async def Reddit(ctx, sub: str):
     for i in range(0,pick):
         submission = next(x for x in submision if not x.stickied)
 
+    percentUpvote = int(submission.upvote_ratio * 100)
+
     if submission.over_18 == True:
         embed.add_field(name="Error", value="Post is too lewd ><")
         await ctx.send(embed=embed)
     else:
+        embed.set_author(name=submission.title, url=f'https://reddit.com/{submission.id}')
         embed.set_image(url=submission.url)
-        await ctx.send(embed=embed)
+        embed.set_footer(text=f'{percentUpvote}% upvoted | {submission.score} upvotes')
+        mesg = await ctx.send(embed=embed)
+        await mesg.add_reaction("👍")
+        await mesg.add_reaction("👎")
 
 
 @client.event
@@ -217,7 +223,8 @@ async def commands(ctx):
     embed.add_field(name='Administration', value='`kick, ban, unban, clear`', inline = True)
     embed.add_field(name='Fun', value='`8ball, ping, say`', inline = True)
     embed.add_field(name='Imagery', value='`Reddit`', inline = True)
-    embed.add_field(name='Misc', value='`WolframAlpha, Schedule`')
+    embed.add_field(name='Interactions', value='`hug, pat`', inline = True)
+    embed.add_field(name='Misc', value='`WolframAlpha, Schedule, Translate`', inline = True)
 
     await ctx.send(embed=embed)
 
@@ -275,5 +282,13 @@ async def Translate(ctx, *, tex: str):
             embed.set_footer(text=f"Translated from {lang.lang} to en")
     time.sleep(6)
     await ctx.send(embed=embed)
+
+@client.command(aliases=["quit"])
+async def close(ctx):
+    if ctx.message.author.id == 426607245904838657:
+        await client.close()
+        print("Bot Closed")  # This is optional, but it is there to tell you.
+    else:
+        await ctx.send("you did a bruh moment")
 
 client.run(token)
